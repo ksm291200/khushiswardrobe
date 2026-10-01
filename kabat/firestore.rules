@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function stylistPath(sid) { return /databases/$(database)/documents/stylists/$(sid); }
+    function grantPath(uid, sid) { return /databases/$(database)/documents/users/$(uid)/grants/$(sid); }
+    function isStylist() { return signedIn() && exists(stylistPath(request.auth.uid)); }
+    function hasGrant(uid) {
+      return isStylist() && exists(grantPath(uid, request.auth.uid)) &&
+        get(grantPath(uid, request.auth.uid)).data.expiresAt > request.time;
+    }
+    // A grant is stamped by the server and lasts at most 14 days (plus an hour for clock drift).
+    function validGrant() {
+      let g = request.resource.data;
+      return g.keys().hasOnly(['expiresAt', 'grantedAt']) &&
+        g.grantedAt == request.time &&
+        g.expiresAt is timestamp &&
+        g.expiresAt > request.time &&
+        g.expiresAt <= request.time + duration.value(337, 'h');
+    }
+    function planUnchanged() {
+      return request.resource.data.get('plan', 'free') == resource.data.get('plan', 'free');
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid) || hasGrant(uid);
+      // Clients can't give themselves a paid plan.
+      allow create: if isOwner(uid) && request.resource.data.get('plan', 'free') == 'free';
+      allow update: if isOwner(uid) && planUnchanged();
+      allow delete: if isOwner(uid);
+
+      match /grants/{sid} {
+        allow read: if isOwner(uid) || (signedIn() && request.auth.uid == sid);
+        allow create, update: if isOwner(uid) && exists(stylistPath(sid)) && validGrant();
+        allow delete: if isOwner(uid);
+      }
+
+      // Everything else in the closet. grants is excluded so the owner rule here
+      // can't be used to skip the grant checks above.
+      match /{col}/{docId} {
+        allow read, write: if col != 'grants' && (isOwner(uid) || hasGrant(uid));
+      }
+    }
+
+    match /stylists/{sid} {
+      allow read: if signedIn();
+      match /clients/{uid} {
+        allow read: if signedIn() && request.auth.uid == sid;
+        // Only listed once the matching grant exists (same batch is fine).
+        allow create, update: if isOwner(uid) && existsAfter(grantPath(uid, sid));
+        allow delete: if isOwner(uid);
+      }
+    }
+  }
+}

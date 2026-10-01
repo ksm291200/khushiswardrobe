@@ -1,0 +1,11 @@
+{
+  "name": "kabat",
+  "private": true,
+  "description": "Dev tooling only. The app itself has no build step.",
+  "scripts": {
+    "dev": "firebase emulators:start --project demo-kabat --import=./emu-data --export-on-exit"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.0.0"
+  }
+}

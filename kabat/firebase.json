@@ -1,0 +1,14 @@
+{
+  "firestore": { "rules": "firestore.rules" },
+  "hosting": {
+    "public": ".",
+    "ignore": ["firebase.json", "firestore.rules", "storage.rules", "package.json", "package-lock.json", "README.md", "**/.*", "**/node_modules/**", "emu-data/**", "test/**"]
+  },
+  "emulators": {
+    "singleProjectMode": true,
+    "auth": { "port": 9099 },
+    "firestore": { "port": 8080 },
+    "hosting": { "port": 5050 },
+    "ui": { "enabled": true, "port": 4000 }
+  }
+}

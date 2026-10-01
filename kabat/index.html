@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FCFAF7">
+<title>Khushi's Closet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="pin hide" id="pin">
+  <div>
+    <div class="brand" style="font-size:1.8rem">Khushi's <em>Closet</em></div>
+    <div class="tiny" style="margin-top:6px">Enter your PIN</div>
+    <input type="password" inputmode="numeric" maxlength="6" id="pinIn" autocomplete="off">
+    <div class="tiny" id="pinMsg"></div>
+  </div>
+</div>
+
+<div class="topbar"><div class="wrap">
+  <button class="brand" id="brandBtn">Khushi's <em>Closet</em></button>
+  <div class="spacer"></div>
+  <button class="iconbtn" id="moreBtn" aria-label="More">⋯</button>
+  <button class="iconbtn solid" id="addBtn" aria-label="Add items">＋</button>
+  <input type="file" id="fileIn" accept="image/*" multiple class="hide"><input type="file" id="inspIn" accept="image/*" multiple class="hide">
+</div></div>
+
+<main class="wrap">
+  <section class="view on" id="v-home"></section>
+  <section class="view" id="v-closet"></section>
+  <section class="view" id="v-build"></section>
+  <section class="view" id="v-studio"></section>
+  <section class="view" id="v-looks"></section>
+  <section class="view" id="v-tag"></section>
+  <section class="view" id="v-swipe"></section>
+</main>
+
+<nav class="tabs">
+  <button data-tab="home" class="on"><span class="g">✦</span>Home</button>
+  <button data-tab="closet"><span class="g">❑</span>Closet</button>
+  <button data-tab="build"><span class="g">◈</span>Build</button>
+  <button data-tab="studio"><span class="g">❀</span>Studio</button>
+  <button data-tab="looks"><span class="g">♡</span>Looks</button>
+</nav>
+
+<div class="bv" id="bv"><div class="top"><button class="iconbtn" id="bvBack" aria-label="Back">‹</button><h2 id="bvName"></h2><button class="iconbtn" id="bvMenu" aria-label="Board menu">⋯</button></div><div class="cw"><div class="canvas" id="canvas"></div></div><div class="tools" id="bvTools"></div></div>
+<div class="sheet" id="sheet"><div class="veil" id="veil"></div><div class="panel" id="panel"></div></div>
+<div class="toast" id="toast"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
